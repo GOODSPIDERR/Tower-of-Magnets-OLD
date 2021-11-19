@@ -60,7 +60,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var hit = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y - 1f), new Vector2(1f,0.05f),
+        var hit = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y), new Vector2(1f,0.05f),
             0f, Vector2.down, 0.05f, groundLayer);
         if (hit.collider != null && yVelocity <= 0f)
         {
@@ -88,7 +88,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             */
 
-            if (grounded) yVelocity = 0f;
+        if (grounded) yVelocity = 0f;
         else yVelocity -= 9.81f * Time.deltaTime;
     }
 
@@ -109,8 +109,10 @@ public class PlayerMovement : MonoBehaviour
         {
             stunned = false;
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            rb.velocity = Vector2.zero;
+            yVelocity = 2f;
             canMove = true;
-            transform.DOMoveY(transform.position.y + 0.5f, 0.25f);
+            //transform.DOMoveY(transform.position.y + 0.5f, 0.25f);
             transform.DORotate(new Vector3(0, 0, 0), 0.25f);
             capsuleCollider.enabled = false;
             capsuleColliderTrigger.enabled = false;
