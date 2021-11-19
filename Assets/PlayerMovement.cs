@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -123,6 +124,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (other.CompareTag("Environment") && rb.velocity.magnitude >= 1f)
             {
+                hitSound.pitch = Random.Range(0.9f, 1.1f);
                 hitSound.Play();
                 cameraShake.Shake(rb.velocity.magnitude, 10f, 0.1f);
             }

@@ -24,7 +24,7 @@ public class CameraShake : MonoBehaviour
     {
         _perlin.m_AmplitudeGain = _currentAmplitude;
         
-        if (_currentAmplitude >= 0f)
+        if (_currentAmplitude > 0f) //Not the most efficient way to do this. Figure out a more efficient solution later
         {
             _currentAmplitude -= _actualTimer * Time.deltaTime;
         }
