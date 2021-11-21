@@ -28,18 +28,32 @@ public class PlayerMovement : MonoBehaviour
     private AudioSource hitSound;
 
     [SerializeField] CameraShake cameraShake;
+    
+    public Animator playerAnimator;
+    public Transform spriteTransform;
+    private float initialSpriteTransform;
+    public Transform cameraFollow;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         boxCollider = GetComponent<BoxCollider2D>();
         hitSound = GetComponent<AudioSource>();
+        initialSpriteTransform = spriteTransform.localScale.x;
     }
 
 
     private void Update()
     {
         inputX = Input.GetAxisRaw("Horizontal");
+
+        if (inputX < 0f)
+            spriteTransform.localScale = new Vector2(-initialSpriteTransform, initialSpriteTransform);
+        else if (inputX > 0f)
+        {
+            spriteTransform.localScale = new Vector2(initialSpriteTransform, initialSpriteTransform);
+        }
+        
         
         
 
@@ -56,6 +70,8 @@ public class PlayerMovement : MonoBehaviour
         {
             Switch();
         }
+        
+        playerAnimator.SetFloat("Speed", Mathf.Abs(inputX));
     }
 
     private void FixedUpdate()
@@ -113,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
             yVelocity = 2f;
             canMove = true;
             //transform.DOMoveY(transform.position.y + 0.5f, 0.25f);
-            transform.DORotate(new Vector3(0, 0, 0), 0.25f);
+            transform.DOLocalRotate(new Vector3(0, 0, 0), 0.25f);
             capsuleCollider.enabled = false;
             capsuleColliderTrigger.enabled = false;
             boxCollider.enabled = true;
@@ -132,5 +148,10 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         
+    }
+
+    private void CameraFollow()
+    {
+        //cameraFollow.position = can't be fucked to do this rn
     }
 }
