@@ -140,7 +140,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (stunned)
         {
-            if (other.CompareTag("Environment") && rb.velocity.magnitude >= 1f)
+            if (rb.velocity.magnitude >= 1f)
             {
                 hitSound.pitch = Random.Range(0.9f, 1.1f);
                 hitSound.Play();
