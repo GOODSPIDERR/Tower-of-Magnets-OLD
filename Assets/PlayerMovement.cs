@@ -32,7 +32,6 @@ public class PlayerMovement : MonoBehaviour
     public Animator playerAnimator;
     public Transform spriteTransform;
     private float initialSpriteTransform;
-    public Transform cameraFollow;
 
     private void Start()
     {
@@ -60,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && grounded && canMove)
         {
             grounded = false;
-            yVelocity = jumpForce;
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
         
         
@@ -76,20 +75,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var hit = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y), new Vector2(1f,0.05f),
-            0f, Vector2.down, 0.05f, groundLayer);
-        if (hit.collider != null && yVelocity <= 0f)
-        {
-            grounded = true;
-        }
-        else
-        {
-            grounded = false;
-        }
+        //var hit = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y), new Vector2(1f,0.05f),
+            //0f, Vector2.down, 0.05f, groundLayer);
+        //if (hit.collider != null && yVelocity <= 0f)
+        //{
+        //    grounded = true;
+        //}
+        //else
+        //{
+        //    grounded = false;
+        //}
 
         if (canMove)
         {
-            rb.velocity = new Vector2(inputX * movementSpeed, yVelocity);
+            rb.velocity = new Vector2(inputX * movementSpeed, rb.velocity.y);
         }
 
             /* Rb add force when not grounded. tried it, feels janky as fuck
@@ -103,9 +102,6 @@ public class PlayerMovement : MonoBehaviour
                     rb.AddForce(new Vector2(inputX * 500 * Time.deltaTime, 9));
                 }
             */
-
-        if (grounded) yVelocity = 0f;
-        else yVelocity -= 9.81f * Time.deltaTime;
     }
 
 
@@ -119,7 +115,7 @@ public class PlayerMovement : MonoBehaviour
             canMove = false;
             capsuleCollider.enabled = true;
             capsuleColliderTrigger.enabled = true;
-            boxCollider.enabled = false;
+            //boxCollider.enabled = false;
         }
         else
         {
@@ -130,9 +126,9 @@ public class PlayerMovement : MonoBehaviour
             canMove = true;
             //transform.DOMoveY(transform.position.y + 0.5f, 0.25f);
             transform.DOLocalRotate(new Vector3(0, 0, 0), 0.25f);
-            capsuleCollider.enabled = false;
+            //capsuleCollider.enabled = false;
             capsuleColliderTrigger.enabled = false;
-            boxCollider.enabled = true;
+            //boxCollider.enabled = true;
         }
     }
 
@@ -150,8 +146,14 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
-    private void CameraFollow()
+    private void OnCollisionEnter2D(Collision2D other)
     {
-        //cameraFollow.position = can't be fucked to do this rn
+        grounded = true;
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        grounded = false;
     }
 }
