@@ -550,7 +550,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 2
   m_Material: {fileID: 6200000, guid: 5588453383434894cb5d3e9fcc6f300b, type: 2}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -607,7 +607,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c8e3f050b248d4fa77b87687112e04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  grounded: 0
   movementSpeed: 6
+  yVelocity: 0
   jumpForce: 12
   canMove: 1
   stunned: 0
@@ -619,6 +622,7 @@ MonoBehaviour:
   cameraShake: {fileID: 601882969}
   playerAnimator: {fileID: 73395984}
   spriteTransform: {fileID: 73395982}
+  initialSpriteTransform: 0
 --- !u!70 &461256164
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1269,7 +1273,7 @@ Rigidbody2D:
   m_Mass: 5
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -2246,7 +2250,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1

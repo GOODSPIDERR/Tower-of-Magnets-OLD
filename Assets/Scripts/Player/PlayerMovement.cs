@@ -7,12 +7,12 @@ using Random = UnityEngine.Random;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    private bool grounded;
+    [HideInInspector] public Rigidbody2D rb;
+    public bool grounded;
     public float movementSpeed = 5f;
-    private float yVelocity = 0f;
+    [HideInInspector] public float yVelocity = 0f;
 
-    [SerializeField] private float jumpForce = 6f;
+    public float jumpForce = 6f;
 
     public bool canMove = true;
 
@@ -23,15 +23,19 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private CapsuleCollider2D capsuleCollider, capsuleColliderTrigger;
     private BoxCollider2D boxCollider;
 
-    private float inputX;
-
     private AudioSource hitSound;
 
     [SerializeField] CameraShake cameraShake;
     
     public Animator playerAnimator;
     public Transform spriteTransform;
-    private float initialSpriteTransform;
+    [HideInInspector] public float initialSpriteTransform;
+    
+    PlayerBaseState currentState;
+    public PlayerMoveState MoveState = new PlayerMoveState();
+    public PlayerAirState AirState = new PlayerAirState();
+    public PlayerStunnedState StunnedState = new PlayerStunnedState();
+    public PlayerCutsceneState CutsceneState = new PlayerCutsceneState();
 
     private void Start()
     {
@@ -39,69 +43,21 @@ public class PlayerMovement : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         hitSound = GetComponent<AudioSource>();
         initialSpriteTransform = spriteTransform.localScale.x;
+        
+        currentState = MoveState;
+        
+        currentState.EnterState(this);
     }
 
 
     private void Update()
     {
-        inputX = Input.GetAxisRaw("Horizontal");
-
-        if (inputX < 0f)
-            spriteTransform.localScale = new Vector2(-initialSpriteTransform, initialSpriteTransform);
-        else if (inputX > 0f)
-        {
-            spriteTransform.localScale = new Vector2(initialSpriteTransform, initialSpriteTransform);
-        }
-        
-        
-        
-
-        if (Input.GetKeyDown(KeyCode.Space) && grounded && canMove)
-        {
-            grounded = false;
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
-        
-        
-        
-        
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Switch();
-        }
-        
-        playerAnimator.SetFloat("Speed", Mathf.Abs(inputX));
+        currentState.UpdateState(this);
     }
 
     private void FixedUpdate()
     {
-        //var hit = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y), new Vector2(1f,0.05f),
-            //0f, Vector2.down, 0.05f, groundLayer);
-        //if (hit.collider != null && yVelocity <= 0f)
-        //{
-        //    grounded = true;
-        //}
-        //else
-        //{
-        //    grounded = false;
-        //}
-
-        if (canMove)
-        {
-            rb.velocity = new Vector2(inputX * movementSpeed, rb.velocity.y);
-        }
-
-            /* Rb add force when not grounded. tried it, feels janky as fuck
-            if (canMove) 
-            {
-                if (grounded)
-                    rb.velocity = new Vector3(inputX * movementSpeed, yVelocity, 0);
-                else
-                {
-                    rb.velocity = new Vector2(rb.velocity.x, yVelocity);
-                    rb.AddForce(new Vector2(inputX * 500 * Time.deltaTime, 9));
-                }
-            */
+        currentState.FixedUpdateState(this);
     }
 
 
@@ -155,5 +111,11 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionExit2D(Collision2D other)
     {
         grounded = false;
+    }
+    
+    public void SwitchState(PlayerBaseState state)
+    {
+        currentState = state;
+        state.EnterState(this);
     }
 }
