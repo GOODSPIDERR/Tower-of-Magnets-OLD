@@ -57,9 +57,26 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        var hit = Physics2D.BoxCast(new Vector2(transform.position.x, transform.position.y), new Vector2(1f,0.1f),
+            0f, Vector2.down, 0.1f, groundLayer);
+        
+        if (hit.collider != null && yVelocity <= 0f)
+        {
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
+        }
+        
         currentState.FixedUpdateState(this);
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        //Gizmos.DrawWireCube(transform.position + transform.forward, new Vector3(1,0.05));
+    }
 
 
     private void Switch()
@@ -100,17 +117,6 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        grounded = true;
-        rb.velocity = new Vector2(rb.velocity.x, 0);
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        grounded = false;
     }
     
     public void SwitchState(PlayerBaseState state)

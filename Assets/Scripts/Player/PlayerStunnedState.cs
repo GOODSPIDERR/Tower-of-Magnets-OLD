@@ -19,7 +19,7 @@ public class PlayerStunnedState : PlayerBaseState
             player.yVelocity = 2f;
             player.transform.DOLocalRotate(new Vector3(0, 0, 0), 0.25f);
             
-            player.SwitchState(player.MoveState);
+            player.SwitchState(player.AirState);
         }
         
         Debug.Log("YOU ARE IN STUNNED STATE");

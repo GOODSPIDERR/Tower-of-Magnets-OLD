@@ -43,6 +43,11 @@ public class PlayerMoveState : PlayerBaseState
         {
             player.SwitchState(player.StunnedState);
         }
+
+        if (!grounded)
+        {
+            player.SwitchState(player.AirState);
+        }
         
         playerAnimator.SetFloat("Speed", Mathf.Abs(inputX));
 

@@ -23,10 +23,10 @@ public class ForceField : MonoBehaviour
         {
             var rb = other.GetComponent<Rigidbody2D>();
             if (!red)
-                rb.AddForce((new Vector2(transform.position.x, transform.position.y) - rb.position) * 5f);
+                rb.AddForce((new Vector2(transform.position.x, transform.position.y) - rb.position) * 10f);
             else
             {
-                rb.AddForce((rb.position - new Vector2(transform.position.x, transform.position.y)) * 5f);
+                rb.AddForce((rb.position - new Vector2(transform.position.x, transform.position.y)) * 10f);
             }
         }
     }
