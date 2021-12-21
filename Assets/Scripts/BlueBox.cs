@@ -8,9 +8,19 @@ public class BlueBox : MonoBehaviour
     private bool magnetized;
     private Rigidbody2D rb;
     private Vector2 difference;
+    private float initialGravityScale;
+    public bool hasRb;
+    public bool lever;
+    public bool tripped;
+    public bool on;
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        if (hasRb)
+        {
+            rb = GetComponent<Rigidbody2D>();
+            initialGravityScale = rb.gravityScale;
+        }
+        
     }
 
     // Update is called once per frame
@@ -28,7 +38,7 @@ public class BlueBox : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (magnetized)
+        if (magnetized && hasRb)
         {
             rb.AddForce(difference * 25f);
         }
@@ -38,13 +48,34 @@ public class BlueBox : MonoBehaviour
     {
         Debug.Log("Blue box clicked.");
         magnetized = true;
-        rb.gravityScale = 0f;
+        if (hasRb) rb.gravityScale = 0f;
     }
     
     private void OnMouseUp()
     {
         Debug.Log("Blue box unclicked.");
         magnetized = false;
-        rb.gravityScale = 1f;
+        if (hasRb) rb.gravityScale = initialGravityScale;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Off"))
+        {
+            if (tripped)
+            {
+                tripped = false;
+            }
+
+            else
+            {
+                on = false;
+            }
+        }
+        
+        else if (other.gameObject.CompareTag("On"))
+        {
+            if (!tripped) on = true;
+        }
     }
 }
